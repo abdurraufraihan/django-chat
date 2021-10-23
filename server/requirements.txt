@@ -1,0 +1,8 @@
+Django==3.2.8
+channels==3.0.4
+django-cors-headers==3.8.0
+django-shortuuidfield==0.1.3
+djangorestframework==3.12.4
+djangorestframework-simplejwt==4.8.0
+Pillow==8.3.2
+shortuuid==1.0.1
