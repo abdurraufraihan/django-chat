@@ -5,6 +5,11 @@ from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 from apps.user.models import User
 
+class UserSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = User
+		fields = ['id', 'image', 'first_name', 'last_name']
+
 class LoginSerializer(TokenObtainPairSerializer):
 	@classmethod
 	def get_token(cls, user):
