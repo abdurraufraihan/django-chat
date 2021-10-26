@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from apps.chat.models import ChatRoom
+from apps.chat.models import ChatRoom, ChatMessage
 from apps.user.serializers import UserSerializer
 
 class ChatRoomSerializer(serializers.ModelSerializer):
@@ -15,3 +15,14 @@ class ChatRoomSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = ChatRoom
 		exclude = ['id']
+
+class ChatMessageSerializer(serializers.ModelSerializer):
+	userName = serializers.SerializerMethodField()
+	userImage = serializers.ImageField(source='user.image')
+
+	class Meta:
+		model = ChatMessage
+		exclude = ['id', 'chat']
+
+	def get_userName(self, Obj):
+		return Obj.user.first_name + ' ' + Obj.user.last_name
