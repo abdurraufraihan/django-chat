@@ -5,6 +5,13 @@ from apps.chat.serializers import ChatRoomSerializer
 from apps.chat.models import ChatRoom
 
 class ChatRoomView(APIView):
+	def get(self, request, userId):
+		chatRooms = ChatRoom.objects.filter(member=userId)
+		serializer = ChatRoomSerializer(
+			chatRooms, many=True, context={"request": request}
+		)
+		return Response(serializer.data, status=status.HTTP_200_OK)
+
 	def post(self, request):
 		serializer = ChatRoomSerializer(
 			data=request.data, context={"request": request}

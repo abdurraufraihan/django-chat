@@ -1,7 +1,9 @@
 from rest_framework import serializers
 from apps.chat.models import ChatRoom
+from apps.user.serializers import UserSerializer
 
 class ChatRoomSerializer(serializers.ModelSerializer):
+	member = UserSerializer(many=True, read_only=True)
 	members = serializers.ListField(write_only=True)
 
 	def create(self, validatedData):
@@ -12,4 +14,4 @@ class ChatRoomSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = ChatRoom
-		exclude = ['id', 'member']
+		exclude = ['id']
