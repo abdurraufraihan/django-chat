@@ -1,0 +1,30 @@
+#authFormContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+#authForm {
+  width: 350px;
+  padding: 15px 25px;
+  box-shadow: 0px 0px 5px #c5c4c5;
+  margin: 0px 15px;
+}
+#authTitle {
+  text-align: center;
+  margin-top: 0px;
+  margin-bottom: 25px;
+  color: #999999;
+}
+.authFieldContainer {
+  margin: 10px 0px;
+}
+.authField {
+  width: 100%;
+  border: 1px solid #c5c4c5;
+  padding: 10px 5px;
+  border-radius: 5px;
+}
+.authField:focus {
+  outline: none;
+}
