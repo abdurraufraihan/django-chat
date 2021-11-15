@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import "../authStyle.css";
 
 const SignupScreen = () => {
@@ -53,6 +54,9 @@ const SignupScreen = () => {
             Sign Up
           </button>
         </form>
+        <p id="authFormFooter">
+          Already have an account. <Link to="/login">Click here</Link> to login.
+        </p>
       </div>
     </div>
   );

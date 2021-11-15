@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import "../authStyle.css";
 
 const LoginScreen = () => {
@@ -28,6 +29,10 @@ const LoginScreen = () => {
             Login
           </button>
         </form>
+        <p id="authFormFooter">
+          Don't have any account! <Link to={"/signup"}>Click here</Link> to
+          singup.
+        </p>
       </div>
     </div>
   );

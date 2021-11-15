@@ -28,3 +28,10 @@
 .authField:focus {
   outline: none;
 }
+#authFormFooter {
+  text-align: center;
+  color: #898989;
+}
+#authFormFooter a {
+  color: #ffc107;
+}
