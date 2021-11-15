@@ -1,0 +1,11 @@
+.user-list-container {
+  overflow: auto;
+  overflow-x: hidden;
+  height: 80vh;
+}
+.chat-online {
+  color: #34ce57;
+}
+.chat-offline {
+  color: #e4606d;
+}
