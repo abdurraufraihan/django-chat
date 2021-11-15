@@ -1,0 +1,23 @@
+#chat-message-input {
+  margin-right: -5px;
+}
+.chat-messages {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 138px);
+  overflow-y: scroll;
+  scroll-behavior: smooth;
+  transition: all 0.5s;
+}
+.chat-message-left,
+.chat-message-right {
+  display: flex;
+  flex-shrink: 0;
+}
+.chat-message-left {
+  margin-right: auto;
+}
+.chat-message-right {
+  flex-direction: row-reverse;
+  margin-left: auto;
+}
