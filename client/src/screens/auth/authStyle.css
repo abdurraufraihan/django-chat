@@ -28,6 +28,11 @@
 .authField:focus {
   outline: none;
 }
+.requiredFieldError {
+  margin: 0px;
+  color: rgb(252, 41, 41);
+  font-size: 9pt;
+}
 #authFormFooter {
   text-align: center;
   color: #898989;
