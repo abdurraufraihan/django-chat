@@ -62,14 +62,14 @@ const SignupScreen = () => {
               name="image"
               id="validatedCustomFile"
               {...register("image", {
-                required: "This field is required",
+                required: true,
               })}
             />
             <label className="custom-file-label" htmlFor="validatedCustomFile">
-              {image[0]?.name ? image[0]?.name : "Choose Image..."}
+              {image ? image[0]?.name : "Choose Image..."}
             </label>
             {errors.image && (
-              <p className="requiredFieldError">This field is required</p>
+              <p className="requiredFieldError mt-2">This field is required</p>
             )}
           </div>
           <div className="authFieldContainer">
