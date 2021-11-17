@@ -4,6 +4,7 @@ import { Link, useHistory } from "react-router-dom";
 import ApiConnector from "../../../api/apiConnector";
 import ApiEndpoints from "../../../api/apiEndpoints";
 import AppPaths from "../../../lib/appPaths";
+import CookieUtil from "../../../util/cookieUtil";
 import "../authStyle.css";
 
 const LoginScreen = ({ location }) => {
@@ -21,6 +22,9 @@ const LoginScreen = ({ location }) => {
       false
     );
     if (successLoginData) {
+      Object.keys(successLoginData).forEach((key) => {
+        CookieUtil.setCookie(key, successLoginData[key]);
+      });
       history.push(AppPaths.HOME);
     }
   };
