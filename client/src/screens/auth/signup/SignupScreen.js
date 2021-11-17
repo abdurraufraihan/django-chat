@@ -1,9 +1,13 @@
 import React, { useRef } from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
+import ApiConnector from "../../../api/apiConnector";
+import ApiEndpoints from "../../../api/apiEndpoints";
+import AppPaths from "../../../lib/appPaths";
 import "../authStyle.css";
 
 const SignupScreen = () => {
+  let history = useHistory();
   const {
     register,
     handleSubmit,
@@ -14,8 +18,21 @@ const SignupScreen = () => {
   password.current = watch("password");
   const image = watch("image");
 
-  const onSubmit = (data) => {
-    console.log(data);
+  const onSubmit = async (signupData) => {
+    const formData = new FormData();
+    formData.append("image", signupData.image[0]);
+    delete signupData["image"];
+    Object.keys(signupData).forEach((key) => {
+      formData.append(key, signupData[key]);
+    });
+    let successData = await ApiConnector.sendPostRequest(
+      ApiEndpoints.SIGN_UP_URL,
+      formData,
+      true
+    );
+    if (successData) {
+      history.push({ pathname: AppPaths.LOGIN_URL });
+    }
   };
 
   return (
