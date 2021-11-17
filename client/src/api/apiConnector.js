@@ -3,7 +3,7 @@ import ApiUtils from "./apiUtils";
 import HttpMethods from "./httpMethods";
 
 const sendGetRequest = async (relativeUrl) => {
-  let url = ServerUrl.BASE_URL + relativeUrl;
+  const url = ServerUrl.BASE_URL + relativeUrl;
   return await fetch(url)
     .then(ApiUtils.statusHandler)
     .then(ApiUtils.jsonHandler)
@@ -11,13 +11,16 @@ const sendGetRequest = async (relativeUrl) => {
     .catch((error) => false);
 };
 
-const sendPostRequest = async (relativeUrl, requestBody) => {
-  let url = ServerUrl.BASE_URL + relativeUrl;
-  return await fetch(url, {
+const sendPostRequest = async (relativeUrl, requestBody, isFormData) => {
+  const url = ServerUrl.BASE_URL + relativeUrl;
+  let options = {
     method: HttpMethods.POST,
-    headers: ApiUtils.getSubmitRequestHeader(),
     body: requestBody,
-  })
+  };
+  if (!isFormData) {
+    options.headers = ApiUtils.getPostRequestHeader();
+  }
+  return await fetch(url, options)
     .then(ApiUtils.statusHandler)
     .then(ApiUtils.jsonHandler)
     .then((data) => data)
