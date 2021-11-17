@@ -31,7 +31,10 @@ const SignupScreen = () => {
       true
     );
     if (successData) {
-      history.push({ pathname: AppPaths.LOGIN_URL });
+      history.push({
+        pathname: AppPaths.LOGIN,
+        state: { redirectFrom: AppPaths.SIGN_UP },
+      });
     }
   };
 

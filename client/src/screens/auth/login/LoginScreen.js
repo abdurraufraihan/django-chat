@@ -1,9 +1,10 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
+import AppPaths from "../../../lib/appPaths";
 import "../authStyle.css";
 
-const LoginScreen = () => {
+const LoginScreen = ({ location }) => {
   const {
     register,
     handleSubmit,
@@ -14,9 +15,25 @@ const LoginScreen = () => {
     console.log(data);
   };
 
+  const getLoginMessage = () => {
+    if (
+      location &&
+      location.state &&
+      location.state.redirectFrom === AppPaths.SIGN_UP
+    ) {
+      return (
+        <div id="loginMessage">
+          Your account has been created successfully. Please login.
+        </div>
+      );
+    }
+    return null;
+  };
+
   return (
     <div id="authFormContainer">
       <div id="authForm">
+        {getLoginMessage()}
         <h2 id="authTitle">Login</h2>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="authFieldContainer">

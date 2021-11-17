@@ -1,5 +1,6 @@
 const AppPaths = {
-  LOGIN_URL: "/login",
+  LOGIN: "/login",
+  SIGN_UP: "/signup",
 };
 
 export default AppPaths;
