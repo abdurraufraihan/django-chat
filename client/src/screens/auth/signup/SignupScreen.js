@@ -25,12 +25,12 @@ const SignupScreen = () => {
     Object.keys(signupData).forEach((key) => {
       formData.append(key, signupData[key]);
     });
-    let successData = await ApiConnector.sendPostRequest(
+    const successSignupData = await ApiConnector.sendPostRequest(
       ApiEndpoints.SIGN_UP_URL,
       formData,
       true
     );
-    if (successData) {
+    if (successSignupData) {
       history.push({
         pathname: AppPaths.LOGIN,
         state: { redirectFrom: AppPaths.SIGN_UP },

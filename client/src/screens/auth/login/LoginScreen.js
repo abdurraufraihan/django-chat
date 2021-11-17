@@ -1,18 +1,28 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
+import ApiConnector from "../../../api/apiConnector";
+import ApiEndpoints from "../../../api/apiEndpoints";
 import AppPaths from "../../../lib/appPaths";
 import "../authStyle.css";
 
 const LoginScreen = ({ location }) => {
+  const history = useHistory();
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) => {
-    console.log(data);
+  const onSubmit = async (loginData) => {
+    const successLoginData = await ApiConnector.sendPostRequest(
+      ApiEndpoints.LOGIN_URL,
+      JSON.stringify(loginData),
+      false
+    );
+    if (successLoginData) {
+      history.push(AppPaths.HOME);
+    }
   };
 
   const getLoginMessage = () => {
