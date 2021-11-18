@@ -78,7 +78,7 @@ const LoginScreen = ({ location }) => {
           </button>
         </form>
         <p id="authFormFooter">
-          Don't have any account! <Link to={"/signup"}>Click here</Link> to
+          Don't have any account! <Link to="/signup">Click here</Link> to
           singup.
         </p>
       </div>
