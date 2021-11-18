@@ -28,6 +28,7 @@ const SignupScreen = () => {
     const successSignupData = await ApiConnector.sendPostRequest(
       ApiEndpoints.SIGN_UP_URL,
       formData,
+      false,
       true
     );
     if (successSignupData) {

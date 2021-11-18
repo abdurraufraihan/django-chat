@@ -19,6 +19,7 @@ const LoginScreen = ({ location }) => {
     const successLoginData = await ApiConnector.sendPostRequest(
       ApiEndpoints.LOGIN_URL,
       JSON.stringify(loginData),
+      false,
       false
     );
     if (successLoginData) {
