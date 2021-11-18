@@ -4,7 +4,8 @@ import HttpMethods from "./httpMethods";
 
 const sendGetRequest = (relativeUrl) => {
   const url = ServerUrl.BASE_URL + relativeUrl;
-  return fetch(url)
+  const options = { headers: ApiUtils.getAuthHeader() };
+  return fetch(url, options)
     .then(ApiUtils.statusHandler)
     .then(ApiUtils.jsonHandler)
     .then((data) => data)

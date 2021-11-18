@@ -1,3 +1,5 @@
+import Constants from "../lib/constants";
+import CookieUtil from "../util/cookieUtil";
 import HttpStatusCode from "./httpStatusCodes";
 
 const statusHandler = (response) => {
@@ -18,10 +20,17 @@ const getPostRequestHeader = () => {
   };
 };
 
+const getAuthHeader = () => {
+  return {
+    Authorization: "Bearer " + CookieUtil.getCookie(Constants.ACCESS_PROPERTY),
+  };
+};
+
 const ApiUtils = {
   statusHandler: statusHandler,
   jsonHandler: jsonHandler,
   getPostRequestHeader: getPostRequestHeader,
+  getAuthHeader: getAuthHeader,
 };
 
 export default ApiUtils;
