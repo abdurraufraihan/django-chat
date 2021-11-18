@@ -10,7 +10,8 @@ import Constants from "../../lib/constants";
 import Modal from "../modal/modal";
 
 const Sidebar = () => {
-  const [chatUsers, setChatUsers] = useState();
+  const [chatUsers, setChatUsers] = useState([]); //sidebar users
+  const [users, setUsers] = useState([]); //popup users
   const [isShowAddPeopleModal, setIsShowAddPeopleModal] = useState(false);
 
   const fetchChatUser = async () => {
@@ -26,6 +27,25 @@ const Sidebar = () => {
     fetchChatUser();
   }, []);
 
+  const getConnectedUserIds = () => {
+    let connectedUsers = "";
+    for (let chatUser of chatUsers) {
+      connectedUsers += chatUser.id + ",";
+    }
+    return connectedUsers.slice(0, -1);
+  };
+
+  const fetchUsers = async () => {
+    const url = ApiEndpoints.USER_URL + "?exclude=" + getConnectedUserIds();
+    const users = await ApiConnector.sendGetRequest(url);
+    setUsers(users);
+  };
+
+  const addPeopleClickHandler = async () => {
+    await fetchUsers();
+    setIsShowAddPeopleModal(true);
+  };
+
   const logoutClickHandler = () => {
     CookieUtil.deleteCookie(Constants.ACCESS_PROPERTY);
     CookieUtil.deleteCookie(Constants.REFRESH_PROPERTY);
@@ -36,7 +56,7 @@ const Sidebar = () => {
     <div className="col-12 col-lg-4 col-xl-2 border-right">
       <div className="d-none d-md-block">
         <button
-          onClick={() => setIsShowAddPeopleModal(true)}
+          onClick={addPeopleClickHandler}
           className="btn btn-outline-warning btn-block my-1 mt-4"
         >
           Add People
@@ -53,7 +73,7 @@ const Sidebar = () => {
                 <img
                   src={chatUser.image}
                   className="rounded-circle mr-1"
-                  alt="User"
+                  alt={chatUser.name}
                   width="40"
                   height="40"
                 />
@@ -79,7 +99,28 @@ const Sidebar = () => {
         modalCloseHandler={() => setIsShowAddPeopleModal(false)}
         show={isShowAddPeopleModal}
       >
-        This is modal
+        {users.length > 0 ? (
+          users?.map((user) => (
+            <div
+              key={user.id}
+              className="d-flex align-items-start pt-1 pb-1 d-flex align-items-center"
+            >
+              <img
+                src={user.image}
+                className="rounded-circle mr-1"
+                alt={user.first_name + " " + user.last_name}
+                width="40"
+                height="40"
+              />
+              <div className="flex-grow-1 ml-2 mr-5">
+                {user.first_name + " " + user.last_name}
+              </div>
+              <button className="btn btn-sm btn-success">Add</button>
+            </div>
+          ))
+        ) : (
+          <h3>No More User Found</h3>
+        )}
       </Modal>
     </div>
   );
