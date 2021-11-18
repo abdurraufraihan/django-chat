@@ -46,6 +46,24 @@ const Sidebar = () => {
     setIsShowAddPeopleModal(true);
   };
 
+  const addMemberClickHandler = async (memberId) => {
+    const userId = CommonUtil.getUserId();
+    let requestBody = {
+      members: [memberId, userId],
+      type: "DM",
+    };
+    const chatMember = await ApiConnector.sendPostRequest(
+      ApiEndpoints.CHAT_URL,
+      JSON.stringify(requestBody),
+      true,
+      false
+    );
+    let currentChatUsers = [...chatUsers];
+    currentChatUsers.push(chatMember);
+    setChatUsers(currentChatUsers);
+    setIsShowAddPeopleModal(false);
+  };
+
   const logoutClickHandler = () => {
     CookieUtil.deleteCookie(Constants.ACCESS_PROPERTY);
     CookieUtil.deleteCookie(Constants.REFRESH_PROPERTY);
@@ -115,7 +133,12 @@ const Sidebar = () => {
               <div className="flex-grow-1 ml-2 mr-5">
                 {user.first_name + " " + user.last_name}
               </div>
-              <button className="btn btn-sm btn-success">Add</button>
+              <button
+                onClick={() => addMemberClickHandler(user.id)}
+                className="btn btn-sm btn-success"
+              >
+                Add
+              </button>
             </div>
           ))
         ) : (
