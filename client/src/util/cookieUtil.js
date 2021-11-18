@@ -21,9 +21,15 @@ const getCookie = (cookieName) => {
   return "";
 };
 
+const deleteCookie = (cookieName) => {
+  document.cookie =
+    cookieName + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+};
+
 const CookieUtil = {
   setCookie: setCookie,
   getCookie: getCookie,
+  deleteCookie: deleteCookie,
 };
 
 export default CookieUtil;
