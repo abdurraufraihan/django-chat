@@ -1,8 +1,16 @@
 import React from "react";
 import "./sidebar.css";
 import { Link } from "react-router-dom";
+import CookieUtil from "../../util/cookieUtil";
+import AppPaths from "../../lib/appPaths";
 
 const Sidebar = () => {
+  const logoutClickHandler = () => {
+    CookieUtil.deleteCookie("access");
+    CookieUtil.deleteCookie("refresh");
+    window.location.href = AppPaths.LOGIN;
+  };
+
   return (
     <div className="col-12 col-lg-4 col-xl-2 border-right">
       <div className="d-none d-md-block">
@@ -63,7 +71,12 @@ const Sidebar = () => {
           </div>
         </Link>
       </div>
-      <button className="btn btn-outline-danger btn-block mt-1">Log Out</button>
+      <button
+        onClick={logoutClickHandler}
+        className="btn btn-outline-danger btn-block mt-1"
+      >
+        Log Out
+      </button>
     </div>
   );
 };
