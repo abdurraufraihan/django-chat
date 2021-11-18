@@ -7,17 +7,23 @@ import ApiConnector from "../../api/apiConnector";
 import ApiEndpoints from "../../api/apiEndpoints";
 import CommonUtil from "../../util/commonUtil";
 import Constants from "../../lib/constants";
+import Modal from "../modal/modal";
 
 const Sidebar = () => {
   const [chatUsers, setChatUsers] = useState();
+  const [isShowAddPeopleModal, setIsShowAddPeopleModal] = useState(false);
 
-  useEffect(async () => {
+  const fetchChatUser = async () => {
     const url = ApiEndpoints.USER_CHAT_URL.replace(
       Constants.USER_ID_PLACE_HOLDER,
       CommonUtil.getUserId()
     );
     const chatUsers = await ApiConnector.sendGetRequest(url);
     setChatUsers(CommonUtil.getFormatedChatUser(chatUsers));
+  };
+
+  useEffect(() => {
+    fetchChatUser();
   }, []);
 
   const logoutClickHandler = () => {
@@ -29,7 +35,10 @@ const Sidebar = () => {
   return (
     <div className="col-12 col-lg-4 col-xl-2 border-right">
       <div className="d-none d-md-block">
-        <button className="btn btn-outline-warning btn-block my-1 mt-4">
+        <button
+          onClick={() => setIsShowAddPeopleModal(true)}
+          className="btn btn-outline-warning btn-block my-1 mt-4"
+        >
           Add People
         </button>
       </div>
@@ -65,6 +74,13 @@ const Sidebar = () => {
       >
         Log Out
       </button>
+      <hr className="d-block d-lg-none mt-1 mb-0" />
+      <Modal
+        modalCloseHandler={() => setIsShowAddPeopleModal(false)}
+        show={isShowAddPeopleModal}
+      >
+        This is modal
+      </Modal>
     </div>
   );
 };
