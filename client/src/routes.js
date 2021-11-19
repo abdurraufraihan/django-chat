@@ -10,6 +10,7 @@ export default class Routes extends Component {
       <Router>
         <Switch>
           <Route path="/" exact component={HomeScreen} />
+          <Route path="/c/:chatId" exact component={HomeScreen} />
           <Route path="/login" exact component={LoginScreen} />
           <Route path="/signup" exact component={SignupScreen} />
         </Switch>

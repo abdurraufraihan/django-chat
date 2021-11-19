@@ -1,7 +1,31 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import ApiConnector from "../../api/apiConnector";
+import ApiEndpoints from "../../api/apiEndpoints";
+import Constants from "../../lib/constants";
+import CommonUtil from "../../util/commonUtil";
 import "./chatBodyStyle.css";
 
-const ChatBody = () => {
+const ChatBody = ({ match }) => {
+  const [messages, setMessages] = useState([]);
+
+  const fetchChatMessage = async (chatId) => {
+    const url =
+      ApiEndpoints.CHAT_MESSAGE_URL.replace(
+        Constants.CHAT_ID_PLACE_HOLDER,
+        chatId
+      ) + "?limit=20&offset=0";
+    const chatMessages = await ApiConnector.sendGetRequest(url);
+    setMessages(chatMessages);
+  };
+
+  useEffect(() => {
+    const currentChatId = CommonUtil.getActiveChatId(match);
+    console.log("currentChatId", currentChatId);
+    if (currentChatId) {
+      fetchChatMessage(currentChatId);
+    }
+  }, []);
+
   return (
     <div className="col-12 col-lg-8 col-xl-10 pl-0 pr-0">
       <div className="py-2 px-4 border-bottom d-none d-lg-block">

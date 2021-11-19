@@ -35,9 +35,14 @@ const getFormatedChatUser = (chatUsers) => {
   }, []);
 };
 
+const getActiveChatId = (match) => {
+  return match && match.params ? match.params.chatId : null;
+};
+
 const CommonUtil = {
   getUserId: getUserId,
   getFormatedChatUser: getFormatedChatUser,
+  getActiveChatId: getActiveChatId,
 };
 
 export default CommonUtil;
