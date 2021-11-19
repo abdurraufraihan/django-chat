@@ -84,6 +84,7 @@ const Sidebar = () => {
         {chatUsers?.map((chatUser) => {
           return (
             <Link
+              to={`/c/${chatUser.roomId}`}
               className="pl-1 list-group-item list-group-item-action border-0"
               key={chatUser.id}
             >
