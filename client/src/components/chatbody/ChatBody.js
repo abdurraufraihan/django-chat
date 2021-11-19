@@ -25,6 +25,13 @@ const ChatBody = ({ match }) => {
     fetchChatMessage();
   }, [CommonUtil.getActiveChatId(match)]);
 
+  const loggedInUserId = CommonUtil.getUserId();
+  const getChatMessageClassName = (userId) => {
+    return loggedInUserId === userId
+      ? "chat-message-right pb-3"
+      : "chat-message-left pb-3";
+  };
+
   return (
     <div className="col-12 col-lg-8 col-xl-10 pl-0 pr-0">
       <div className="py-2 px-4 border-bottom d-none d-lg-block">
@@ -51,38 +58,26 @@ const ChatBody = ({ match }) => {
           id="chat-message-container"
           className="chat-messages pl-4 pt-4 pr-4 pb-1 d-flex flex-column-reverse"
         >
-          <div className="chat-message-left pb-3">
-            <div>
-              <img
-                src="https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50?f=y"
-                className="rounded-circle mr-1"
-                alt="user image"
-                width="40"
-                height="40"
-              />
-              <div className="text-muted small text-nowrap mt-2">10:15 AM</div>
+          {messages?.results?.map((message, index) => (
+            <div key={index} className={getChatMessageClassName(message.user)}>
+              <div>
+                <img
+                  src={message.userImage}
+                  className="rounded-circle mr-1"
+                  alt={message.userName}
+                  width="40"
+                  height="40"
+                />
+                <div className="text-muted small text-nowrap mt-2">
+                  {CommonUtil.getTimeFromDate(message.timestamp)}
+                </div>
+              </div>
+              <div className="flex-shrink-1 bg-light ml-1 rounded py-2 px-3 mr-3">
+                <div className="font-weight-bold mb-1">{message.userName}</div>
+                {message.message}
+              </div>
             </div>
-            <div className="flex-shrink-1 bg-light ml-1 rounded py-2 px-3 mr-3">
-              <div className="font-weight-bold mb-1">Raihan</div>
-              This is left message
-            </div>
-          </div>
-          <div className="chat-message-right pb-3">
-            <div>
-              <img
-                src="https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50?f=y"
-                className="rounded-circle mr-1"
-                alt="user image"
-                width="40"
-                height="40"
-              />
-              <div className="text-muted small text-nowrap mt-2">10:20 AM</div>
-            </div>
-            <div className="flex-shrink-1 bg-light ml-1 rounded py-2 px-3 mr-3">
-              <div className="font-weight-bold mb-1">Raihan</div>
-              This is right message
-            </div>
-          </div>
+          ))}
         </div>
       </div>
       <div className="flex-grow-0 py-3 px-4 border-top">

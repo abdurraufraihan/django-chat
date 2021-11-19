@@ -2,6 +2,31 @@ import jwt_decode from "jwt-decode";
 import Constants from "../lib/constants";
 import CookieUtil from "./cookieUtil";
 
+const is_date = (date) => {
+  if (Object.prototype.toString.call(date) === "[object Date]") {
+    return true;
+  }
+  return false;
+};
+
+const getTimeFromDate = (date) => {
+  let dateObj = is_date(date) ? date : new Date(date);
+  let hour = dateObj.getHours();
+  let minute = dateObj.getMinutes();
+  let meridian = "am";
+  if (hour > 12) {
+    hour -= 12;
+    meridian = "pm";
+  }
+  if (hour === 0) {
+    hour = 12;
+  }
+  if (minute < 10) {
+    minute = "0" + minute;
+  }
+  return hour + ":" + minute + " " + meridian;
+};
+
 const getUserId = () => {
   let token = CookieUtil.getCookie(Constants.ACCESS_PROPERTY);
   if (token) {
@@ -40,6 +65,7 @@ const getActiveChatId = (match) => {
 };
 
 const CommonUtil = {
+  getTimeFromDate: getTimeFromDate,
   getUserId: getUserId,
   getFormatedChatUser: getFormatedChatUser,
   getActiveChatId: getActiveChatId,
