@@ -1,4 +1,5 @@
 import React from "react";
+import AuthRequired from "../../components/auth/AuthRequired";
 import ChatBody from "../../components/chatbody/ChatBody";
 import Sidebar from "../../components/sidebar/Sidebar";
 
@@ -17,4 +18,4 @@ const HomeScreen = (props) => {
   );
 };
 
-export default HomeScreen;
+export default AuthRequired(HomeScreen);

@@ -18,7 +18,7 @@ const getCookie = (cookieName) => {
       return cookie.substring(name.length, cookie.length);
     }
   }
-  return "";
+  return null;
 };
 
 const deleteCookie = (cookieName) => {
