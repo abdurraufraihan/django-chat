@@ -9,7 +9,7 @@ const HomeScreen = (props) => {
       <div className="container-fluid p-0">
         <div className="container-fluid">
           <div className="row g-0">
-            <Sidebar />
+            <Sidebar {...props} />
             <ChatBody {...props} />
           </div>
         </div>

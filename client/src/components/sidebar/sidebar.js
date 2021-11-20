@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./sidebar.css";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import CookieUtil from "../../util/cookieUtil";
 import AppPaths from "../../lib/appPaths";
 import ApiConnector from "../../api/apiConnector";
@@ -9,10 +9,17 @@ import CommonUtil from "../../util/commonUtil";
 import Constants from "../../lib/constants";
 import Modal from "../modal/modal";
 
-const Sidebar = () => {
+const Sidebar = ({ location }) => {
+  const history = useHistory();
   const [chatUsers, setChatUsers] = useState([]); //sidebar users
   const [users, setUsers] = useState([]); //popup users
   const [isShowAddPeopleModal, setIsShowAddPeopleModal] = useState(false);
+
+  const redirectUserToDefaultChatRoom = (chatUsers) => {
+    if (location?.pathname === AppPaths.HOME) {
+      history.push("/c/" + chatUsers[0].roomId);
+    }
+  };
 
   const fetchChatUser = async () => {
     const url = ApiEndpoints.USER_CHAT_URL.replace(
@@ -20,7 +27,9 @@ const Sidebar = () => {
       CommonUtil.getUserId()
     );
     const chatUsers = await ApiConnector.sendGetRequest(url);
-    setChatUsers(CommonUtil.getFormatedChatUser(chatUsers));
+    const formatedChatUser = CommonUtil.getFormatedChatUser(chatUsers);
+    redirectUserToDefaultChatRoom(formatedChatUser);
+    setChatUsers(formatedChatUser);
   };
 
   useEffect(() => {
