@@ -4,15 +4,12 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 from apps.chat.models import ChatRoom
 
 class ChatConsumer(AsyncWebsocketConsumer):
-	def getChatRoomsOfUser(self, userId):
-		return ChatRoom.objects.filter(member=userId)
-
 	async def connect(self):
 		self.userId = self.scope['url_route']['kwargs']['userId']
-		userRooms = await database_sync_to_async(
-			self.getChatRoomsOfUser
-		)(self.userId)
-		for room in userRooms:
+		self.userRooms = await database_sync_to_async(
+			list
+		)(ChatRoom.objects.filter(member=self.userId))
+		for room in self.userRooms:
 			await self.channel_layer.group_add(
 				room.roomId,
 				self.channel_name
@@ -28,8 +25,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
 	async def receive(self, text_data):
 		text_data_json = json.loads(text_data)
 		message = text_data_json['message']
+		roomId = text_data_json['roomId']
 		await self.channel_layer.group_send(
-			self.room_group_name,
+			roomId,
 			{
 				'type': 'chat_message',
 				'message': message
