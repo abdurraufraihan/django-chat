@@ -9,15 +9,20 @@ import CommonUtil from "../../util/commonUtil";
 import Constants from "../../lib/constants";
 import Modal from "../modal/modal";
 
-const Sidebar = ({ location }) => {
+const Sidebar = (props) => {
   const history = useHistory();
   const [chatUsers, setChatUsers] = useState([]); //sidebar users
   const [users, setUsers] = useState([]); //popup users
   const [isShowAddPeopleModal, setIsShowAddPeopleModal] = useState(false);
 
   const redirectUserToDefaultChatRoom = (chatUsers) => {
-    if (location?.pathname === AppPaths.HOME) {
+    if (props?.location?.pathname === AppPaths.HOME) {
+      props.setActiveChatMember(chatUsers[0]);
       history.push("/c/" + chatUsers[0].roomId);
+    } else {
+      const activeChatId = CommonUtil.getActiveChatId(props.match);
+      const chatUser = chatUsers.find((user) => user.roomId === activeChatId);
+      props.setActiveChatMember(chatUser);
     }
   };
 
@@ -28,8 +33,8 @@ const Sidebar = ({ location }) => {
     );
     const chatUsers = await ApiConnector.sendGetRequest(url);
     const formatedChatUser = CommonUtil.getFormatedChatUser(chatUsers);
-    redirectUserToDefaultChatRoom(formatedChatUser);
     setChatUsers(formatedChatUser);
+    redirectUserToDefaultChatRoom(formatedChatUser);
   };
 
   useEffect(() => {
@@ -93,6 +98,7 @@ const Sidebar = ({ location }) => {
         {chatUsers?.map((chatUser) => {
           return (
             <Link
+              onClick={() => props.setActiveChatMember(chatUser)}
               to={`/c/${chatUser.roomId}`}
               className="pl-1 list-group-item list-group-item-action border-0"
               key={chatUser.id}

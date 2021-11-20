@@ -5,7 +5,7 @@ import Constants from "../../lib/constants";
 import CommonUtil from "../../util/commonUtil";
 import "./chatBodyStyle.css";
 
-const ChatBody = ({ match }) => {
+const ChatBody = ({ currentChattingMember, match }) => {
   const [messages, setMessages] = useState([]);
 
   const fetchChatMessage = async () => {
@@ -38,7 +38,7 @@ const ChatBody = ({ match }) => {
         <div className="d-flex align-items-center py-1">
           <div className="position-relative">
             <img
-              src="https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50?f=y"
+              src={currentChattingMember?.image}
               className="rounded-circle mr-1"
               alt="User"
               width="40"
@@ -46,10 +46,7 @@ const ChatBody = ({ match }) => {
             />
           </div>
           <div className="flex-grow-1 pl-3">
-            <strong>Raihan</strong>
-            <div className="text-muted small">
-              <em>Typing...</em>
-            </div>
+            <strong>{currentChattingMember?.name}</strong>
           </div>
         </div>
       </div>
