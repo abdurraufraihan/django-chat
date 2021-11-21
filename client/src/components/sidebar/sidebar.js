@@ -77,6 +77,11 @@ const Sidebar = (props) => {
     setIsShowAddPeopleModal(false);
   };
 
+  const getActiveChatClass = (roomId) => {
+    let activeChatId = CommonUtil.getActiveChatId(props.match);
+    return roomId === activeChatId ? "active-chat" : "";
+  };
+
   const logoutClickHandler = () => {
     CookieUtil.deleteCookie(Constants.ACCESS_PROPERTY);
     CookieUtil.deleteCookie(Constants.REFRESH_PROPERTY);
@@ -99,7 +104,10 @@ const Sidebar = (props) => {
             <Link
               onClick={() => props.setActiveChatMember(chatUser)}
               to={`/c/${chatUser.roomId}`}
-              className="pl-1 list-group-item list-group-item-action border-0"
+              className={
+                "pl-1 list-group-item list-group-item-action border-0 " +
+                getActiveChatClass(chatUser.roomId)
+              }
               key={chatUser.id}
             >
               <div className="d-flex align-items-start">
