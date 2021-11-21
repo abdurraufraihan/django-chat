@@ -1,13 +1,12 @@
 import React, { useRef } from "react";
 import { useForm } from "react-hook-form";
-import { Link, useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 import ApiConnector from "../../../api/apiConnector";
 import ApiEndpoints from "../../../api/apiEndpoints";
 import AppPaths from "../../../lib/appPaths";
 import "../authStyle.css";
 
-const SignupScreen = () => {
-  let history = useHistory();
+const SignupScreen = ({ history }) => {
   const {
     register,
     handleSubmit,

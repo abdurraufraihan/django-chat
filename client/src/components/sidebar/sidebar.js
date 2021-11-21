@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./sidebar.css";
-import { Link, useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 import CookieUtil from "../../util/cookieUtil";
 import AppPaths from "../../lib/appPaths";
 import ApiConnector from "../../api/apiConnector";
@@ -10,7 +10,6 @@ import Constants from "../../lib/constants";
 import Modal from "../modal/modal";
 
 const Sidebar = (props) => {
-  const history = useHistory();
   const [chatUsers, setChatUsers] = useState([]); //sidebar users
   const [users, setUsers] = useState([]); //popup users
   const [isShowAddPeopleModal, setIsShowAddPeopleModal] = useState(false);
@@ -18,7 +17,7 @@ const Sidebar = (props) => {
   const redirectUserToDefaultChatRoom = (chatUsers) => {
     if (props?.location?.pathname === AppPaths.HOME) {
       props.setActiveChatMember(chatUsers[0]);
-      history.push("/c/" + chatUsers[0].roomId);
+      props.history.push("/c/" + chatUsers[0].roomId);
     } else {
       const activeChatId = CommonUtil.getActiveChatId(props.match);
       const chatUser = chatUsers.find((user) => user.roomId === activeChatId);

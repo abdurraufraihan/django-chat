@@ -1,14 +1,13 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import { Link, useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 import ApiConnector from "../../../api/apiConnector";
 import ApiEndpoints from "../../../api/apiEndpoints";
 import AppPaths from "../../../lib/appPaths";
 import CookieUtil from "../../../util/cookieUtil";
 import "../authStyle.css";
 
-const LoginScreen = ({ location }) => {
-  const history = useHistory();
+const LoginScreen = ({ location, history }) => {
   const {
     register,
     handleSubmit,
