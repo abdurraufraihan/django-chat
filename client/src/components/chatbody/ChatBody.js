@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import ApiConnector from "../../api/apiConnector";
 import ApiEndpoints from "../../api/apiEndpoints";
+import ServerUrl from "../../api/serverUrl";
 import Constants from "../../lib/constants";
 import CommonUtil from "../../util/commonUtil";
 import "./chatBodyStyle.css";
 
-const ChatBody = ({ currentChattingMember, match }) => {
-  const [messages, setMessages] = useState([]);
+const ChatBody = ({ socket, currentChattingMember, match }) => {
+  const [inputMessage, setInputMessage] = useState("");
+  const [messages, setMessages] = useState({});
 
   const fetchChatMessage = async () => {
     const currentChatId = CommonUtil.getActiveChatId(match);
@@ -30,6 +32,30 @@ const ChatBody = ({ currentChattingMember, match }) => {
     return loggedInUserId === userId
       ? "chat-message-right pb-3"
       : "chat-message-left pb-3";
+  };
+
+  socket.onmessage = (event) => {
+    const message = JSON.parse(event.data);
+    message["userImage"] = ServerUrl.BASE_URL.slice(0, -1) + message.userImage;
+    setMessages((prevState) => {
+      let messagesState = JSON.parse(JSON.stringify(prevState));
+      messagesState.results.unshift(message);
+      return messagesState;
+    });
+  };
+
+  const messageSubmitHandler = (event) => {
+    event.preventDefault();
+    if (inputMessage) {
+      socket.send(
+        JSON.stringify({
+          message: inputMessage,
+          user: CommonUtil.getUserId(),
+          roomId: CommonUtil.getActiveChatId(match),
+        })
+      );
+    }
+    setInputMessage("");
   };
 
   return (
@@ -78,9 +104,11 @@ const ChatBody = ({ currentChattingMember, match }) => {
         </div>
       </div>
       <div className="flex-grow-0 py-3 px-4 border-top">
-        <form>
+        <form onSubmit={messageSubmitHandler}>
           <div className="input-group">
             <input
+              onChange={(event) => setInputMessage(event.target.value)}
+              value={inputMessage}
               id="chat-message-input"
               type="text"
               className="form-control"
