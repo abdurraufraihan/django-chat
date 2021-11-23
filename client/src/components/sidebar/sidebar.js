@@ -89,7 +89,7 @@ const Sidebar = (props) => {
   };
 
   return (
-    <div className="col-12 col-lg-4 col-xl-2 border-right">
+    <div className="col-12 col-sm-4 col-md-4 col-lg-4 col-xl-2 border-right">
       <div className="d-none d-md-block">
         <button
           onClick={addPeopleClickHandler}

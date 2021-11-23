@@ -59,7 +59,7 @@ const ChatBody = ({ socket, currentChattingMember, match }) => {
   };
 
   return (
-    <div className="col-12 col-lg-8 col-xl-10 pl-0 pr-0">
+    <div className="col-12 col-sm-8 col-md-8 col-lg-8 col-xl-10 pl-0 pr-0">
       <div className="py-2 px-4 border-bottom d-none d-lg-block">
         <div className="d-flex align-items-center py-1">
           <div className="position-relative">
@@ -113,6 +113,7 @@ const ChatBody = ({ socket, currentChattingMember, match }) => {
               type="text"
               className="form-control"
               placeholder="Type your message"
+              autoComplete="off"
             />
             <button
               id="chat-message-submit"
