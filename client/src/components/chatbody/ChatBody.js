@@ -7,6 +7,9 @@ import SocketActions from "../../lib/socketActions";
 import CommonUtil from "../../util/commonUtil";
 import "./chatBodyStyle.css";
 
+let typingTimer = 0;
+let isTypingSignalSent = false;
+
 const ChatBody = ({ socket, currentChattingMember, match }) => {
   const [inputMessage, setInputMessage] = useState("");
   const [messages, setMessages] = useState({});
@@ -81,8 +84,6 @@ const ChatBody = ({ socket, currentChattingMember, match }) => {
     );
   };
 
-  let typingTimer = 0;
-  let isTypingSignalSent = false;
   const chatMessageTypingHandler = (event) => {
     if (event.keyCode !== Constants.ENTER_KEY_CODE) {
       if (!isTypingSignalSent) {
@@ -93,7 +94,7 @@ const ChatBody = ({ socket, currentChattingMember, match }) => {
       typingTimer = setTimeout(() => {
         sendTypingSignal(false);
         isTypingSignalSent = false;
-      }, 2000);
+      }, 3000);
     } else {
       clearTimeout(typingTimer);
       isTypingSignalSent = false;

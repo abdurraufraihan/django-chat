@@ -40,7 +40,7 @@
   height: 17px;
 }
 .typing .dot {
-  animation: mercuryTypingAnimation 1.8s infinite ease-in-out;
+  animation: mercuryTypingAnimation 1s infinite ease-in-out;
   background-color: #fff0c0;
   border-radius: 50%;
   height: 7px;
