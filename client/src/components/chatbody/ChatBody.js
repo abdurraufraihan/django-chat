@@ -3,12 +3,14 @@ import ApiConnector from "../../api/apiConnector";
 import ApiEndpoints from "../../api/apiEndpoints";
 import ServerUrl from "../../api/serverUrl";
 import Constants from "../../lib/constants";
+import SocketActions from "../../lib/socketActions";
 import CommonUtil from "../../util/commonUtil";
 import "./chatBodyStyle.css";
 
 const ChatBody = ({ socket, currentChattingMember, match }) => {
   const [inputMessage, setInputMessage] = useState("");
   const [messages, setMessages] = useState({});
+  const [typing, setTyping] = useState(false);
 
   const fetchChatMessage = async () => {
     const currentChatId = CommonUtil.getActiveChatId(match);
@@ -35,13 +37,22 @@ const ChatBody = ({ socket, currentChattingMember, match }) => {
   };
 
   socket.onmessage = (event) => {
-    const message = JSON.parse(event.data);
-    message["userImage"] = ServerUrl.BASE_URL.slice(0, -1) + message.userImage;
-    setMessages((prevState) => {
-      let messagesState = JSON.parse(JSON.stringify(prevState));
-      messagesState.results.unshift(message);
-      return messagesState;
-    });
+    const data = JSON.parse(event.data);
+    const chatId = CommonUtil.getActiveChatId(match);
+    const userId = CommonUtil.getUserId();
+    if (chatId === data.roomId) {
+      if (data.action === SocketActions.MESSAGE) {
+        data["userImage"] = ServerUrl.BASE_URL.slice(0, -1) + data.userImage;
+        setMessages((prevState) => {
+          let messagesState = JSON.parse(JSON.stringify(prevState));
+          messagesState.results.unshift(data);
+          return messagesState;
+        });
+        setTyping((prevState) => false);
+      } else if (data.action === SocketActions.TYPING && data.user !== userId) {
+        setTyping((prevState) => data.typing);
+      }
+    }
   };
 
   const messageSubmitHandler = (event) => {
@@ -49,6 +60,7 @@ const ChatBody = ({ socket, currentChattingMember, match }) => {
     if (inputMessage) {
       socket.send(
         JSON.stringify({
+          action: SocketActions.MESSAGE,
           message: inputMessage,
           user: CommonUtil.getUserId(),
           roomId: CommonUtil.getActiveChatId(match),
@@ -56,6 +68,36 @@ const ChatBody = ({ socket, currentChattingMember, match }) => {
       );
     }
     setInputMessage("");
+  };
+
+  const sendTypingSignal = (typing) => {
+    socket.send(
+      JSON.stringify({
+        action: SocketActions.TYPING,
+        typing: typing,
+        user: CommonUtil.getUserId(),
+        roomId: CommonUtil.getActiveChatId(match),
+      })
+    );
+  };
+
+  let typingTimer = 0;
+  let isTypingSignalSent = false;
+  const chatMessageTypingHandler = (event) => {
+    if (event.keyCode !== Constants.ENTER_KEY_CODE) {
+      if (!isTypingSignalSent) {
+        sendTypingSignal(true);
+        isTypingSignalSent = true;
+      }
+      clearTimeout(typingTimer);
+      typingTimer = setTimeout(() => {
+        sendTypingSignal(false);
+        isTypingSignalSent = false;
+      }, 2000);
+    } else {
+      clearTimeout(typingTimer);
+      isTypingSignalSent = false;
+    }
   };
 
   return (
@@ -81,6 +123,15 @@ const ChatBody = ({ socket, currentChattingMember, match }) => {
           id="chat-message-container"
           className="chat-messages pl-4 pt-4 pr-4 pb-1 d-flex flex-column-reverse"
         >
+          {typing && (
+            <div className="chat-message-left chat-bubble mb-1">
+              <div className="typing">
+                <div className="dot"></div>
+                <div className="dot"></div>
+                <div className="dot"></div>
+              </div>
+            </div>
+          )}
           {messages?.results?.map((message, index) => (
             <div key={index} className={getChatMessageClassName(message.user)}>
               <div>
@@ -108,6 +159,7 @@ const ChatBody = ({ socket, currentChattingMember, match }) => {
           <div className="input-group">
             <input
               onChange={(event) => setInputMessage(event.target.value)}
+              onKeyUp={chatMessageTypingHandler}
               value={inputMessage}
               id="chat-message-input"
               type="text"

@@ -12,6 +12,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 			chat=chatObj, user=userObj, message=message
 		)
 		return {
+			'action': 'message',
 			'user': userId,
 			'roomId': roomId,
 			'message': message,
@@ -41,12 +42,17 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
 	async def receive(self, text_data):
 		text_data_json = json.loads(text_data)
-		message = text_data_json['message']
-		userId = text_data_json['user']
+		action = text_data_json['action']
 		roomId = text_data_json['roomId']
-		chatMessage = await database_sync_to_async(
-			self.saveMessage
-		)(message, userId, roomId)
+		chatMessage = {}
+		if action == 'message':
+			message = text_data_json['message']
+			userId = text_data_json['user']
+			chatMessage = await database_sync_to_async(
+				self.saveMessage
+			)(message, userId, roomId)
+		elif action == 'typing':
+			chatMessage = text_data_json
 		await self.channel_layer.group_send(
 			roomId,
 			{
