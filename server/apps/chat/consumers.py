@@ -44,12 +44,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
 		onlineUserList = await database_sync_to_async(self.getOnlineUsers)()
 		chatMessage = {
 			'type': 'chat_message',
-			'action': 'onlineUser',
-			'userList': onlineUserList,
+			'message': {
+				'action': 'onlineUser',
+				'userList': onlineUserList
+			}
 		}
-		await self.channel_layer.group_send(
-			self.room_group_name, chatMessage
-		)
+		await self.channel_layer.group_send('onlineUser', chatMessage)
 
 	async def connect(self):
 		self.userId = self.scope['url_route']['kwargs']['userId']
@@ -61,7 +61,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
 				room.roomId,
 				self.channel_name
 			)
-		self.user = await database_sync_to_async(self.getUser)(self.user_id)
+		await self.channel_layer.group_add('onlineUser', self.channel_name)
+		self.user = await database_sync_to_async(self.getUser)(self.userId)
 		await database_sync_to_async(self.addOnlineUser)(self.user)
 		await self.sendOnlineUserList()
 		await self.accept()
