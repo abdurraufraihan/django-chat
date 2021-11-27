@@ -2,9 +2,28 @@ import json
 from channels.db import database_sync_to_async
 from channels.generic.websocket import AsyncWebsocketConsumer
 from apps.chat.models import ChatRoom, ChatMessage
-from apps.user.models import User
+from apps.user.models import User, OnlineUser
 
 class ChatConsumer(AsyncWebsocketConsumer):
+	def getUser(self, userId):
+		return User.objects.get(id=userId)
+
+	def getOnlineUsers(self):
+		onlineUsers = OnlineUser.objects.all()
+		return [onlineUser.user.id for onlineUser in onlineUsers]
+
+	def addOnlineUser(self, user):
+		try:
+			OnlineUser.objects.create(user=user)
+		except:
+			pass
+
+	def deleteOnlineUser(self, user):
+		try:
+			OnlineUser.objects.get(user=user).delete()
+		except:
+			pass
+
 	def saveMessage(self, message, userId, roomId):
 		userObj = User.objects.get(id=userId)
 		chatObj = ChatRoom.objects.get(roomId=roomId)
@@ -21,6 +40,17 @@ class ChatConsumer(AsyncWebsocketConsumer):
 			'timestamp': str(chatMessageObj.timestamp)
 		}
 
+	async def sendOnlineUserList(self):
+		onlineUserList = await database_sync_to_async(self.getOnlineUsers)()
+		chatMessage = {
+			'type': 'chat_message',
+			'action': 'onlineUser',
+			'userList': onlineUserList,
+		}
+		await self.channel_layer.group_send(
+			self.room_group_name, chatMessage
+		)
+
 	async def connect(self):
 		self.userId = self.scope['url_route']['kwargs']['userId']
 		self.userRooms = await database_sync_to_async(
@@ -31,6 +61,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
 				room.roomId,
 				self.channel_name
 			)
+		self.user = await database_sync_to_async(self.getUser)(self.user_id)
+		await database_sync_to_async(self.addOnlineUser)(self.user)
+		await self.sendOnlineUserList()
 		await self.accept()
 
 	async def disconnect(self, close_code):
