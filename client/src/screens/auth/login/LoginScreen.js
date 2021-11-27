@@ -7,7 +7,7 @@ import AppPaths from "../../../lib/appPaths";
 import CookieUtil from "../../../util/cookieUtil";
 import "../authStyle.css";
 
-const LoginScreen = ({ location, history }) => {
+const LoginScreen = ({ location }) => {
   const {
     register,
     handleSubmit,
@@ -25,7 +25,7 @@ const LoginScreen = ({ location, history }) => {
       Object.keys(successLoginData).forEach((key) => {
         CookieUtil.setCookie(key, successLoginData[key]);
       });
-      history.push(AppPaths.HOME);
+      window.location.href = AppPaths.HOME;
     }
   };
 
