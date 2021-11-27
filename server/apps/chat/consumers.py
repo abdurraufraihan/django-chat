@@ -67,6 +67,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
 		await self.accept()
 
 	async def disconnect(self, close_code):
+		await database_sync_to_async(self.deleteOnlineUser)(self.user)
+		await self.sendOnlineUserList()
 		for room in self.userRooms:
 			await self.channel_layer.group_discard(
 				room.roomId,
