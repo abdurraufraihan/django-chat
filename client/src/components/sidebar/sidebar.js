@@ -16,12 +16,12 @@ const Sidebar = (props) => {
 
   const redirectUserToDefaultChatRoom = (chatUsers) => {
     if (props?.location?.pathname === AppPaths.HOME) {
-      props.setActiveChatMember(chatUsers[0]);
+      props.setCurrentChattingMember(chatUsers[0]);
       props.history.push("/c/" + chatUsers[0].roomId);
     } else {
       const activeChatId = CommonUtil.getActiveChatId(props.match);
       const chatUser = chatUsers.find((user) => user.roomId === activeChatId);
-      props.setActiveChatMember(chatUser);
+      props.setCurrentChattingMember(chatUser);
     }
   };
 
@@ -31,14 +31,17 @@ const Sidebar = (props) => {
       CommonUtil.getUserId()
     );
     const chatUsers = await ApiConnector.sendGetRequest(url);
-    const formatedChatUser = CommonUtil.getFormatedChatUser(chatUsers);
+    const formatedChatUser = CommonUtil.getFormatedChatUser(
+      chatUsers,
+      props.onlineUserList
+    );
     setChatUsers(formatedChatUser);
     redirectUserToDefaultChatRoom(formatedChatUser);
   };
 
   useEffect(() => {
     fetchChatUser();
-  }, []);
+  }, [props.onlineUserList]);
 
   const getConnectedUserIds = () => {
     let connectedUsers = "";
@@ -102,7 +105,7 @@ const Sidebar = (props) => {
         {chatUsers?.map((chatUser) => {
           return (
             <Link
-              onClick={() => props.setActiveChatMember(chatUser)}
+              onClick={() => props.setCurrentChattingMember(chatUser)}
               to={`/c/${chatUser.roomId}`}
               className={
                 "pl-1 list-group-item list-group-item-action border-0 " +
@@ -121,7 +124,17 @@ const Sidebar = (props) => {
                 <div className="flex-grow-1 ml-3">
                   {chatUser.name}
                   <div className="small">
-                    <span className="fas fa-circle chat-online"></span> Online
+                    {chatUser.isOnline ? (
+                      <>
+                        <span className="fas fa-circle chat-online"></span>{" "}
+                        Online
+                      </>
+                    ) : (
+                      <>
+                        <span className="fas fa-circle chat-offline"></span>{" "}
+                        offline
+                      </>
+                    )}
                   </div>
                 </div>
               </div>

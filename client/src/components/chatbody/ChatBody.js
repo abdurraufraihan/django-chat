@@ -7,10 +7,13 @@ import SocketActions from "../../lib/socketActions";
 import CommonUtil from "../../util/commonUtil";
 import "./chatBodyStyle.css";
 
+let socket = new WebSocket(
+  ServerUrl.WS_BASE_URL + `ws/users/${CommonUtil.getUserId()}/chat/`
+);
 let typingTimer = 0;
 let isTypingSignalSent = false;
 
-const ChatBody = ({ socket, currentChattingMember, match }) => {
+const ChatBody = ({ match, currentChattingMember, setOnlineUserList }) => {
   const [inputMessage, setInputMessage] = useState("");
   const [messages, setMessages] = useState({});
   const [typing, setTyping] = useState(false);
@@ -51,10 +54,13 @@ const ChatBody = ({ socket, currentChattingMember, match }) => {
           messagesState.results.unshift(data);
           return messagesState;
         });
-        setTyping((prevState) => false);
+        setTyping(false);
       } else if (data.action === SocketActions.TYPING && data.user !== userId) {
-        setTyping((prevState) => data.typing);
+        setTyping(data.typing);
       }
+    }
+    if (data.action === SocketActions.ONLINE_USER) {
+      setOnlineUserList(data.userList);
     }
   };
 

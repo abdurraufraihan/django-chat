@@ -36,7 +36,7 @@ const getUserId = () => {
   return "";
 };
 
-const getFormatedChatUser = (chatUsers) => {
+const getFormatedChatUser = (chatUsers, onlineUserList) => {
   const userId = getUserId();
   return chatUsers.reduce((acumulator, item) => {
     if (item.type === "DM" || item.type === "SELF") {
@@ -52,6 +52,7 @@ const getFormatedChatUser = (chatUsers) => {
         newResult["name"] = member.first_name + " " + member.last_name;
         newResult["image"] = member.image;
         newResult["id"] = member.id;
+        newResult["isOnline"] = onlineUserList?.includes(member.id);
       }
       acumulator.push(newResult);
       return acumulator;
