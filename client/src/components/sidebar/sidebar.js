@@ -41,7 +41,7 @@ const Sidebar = (props) => {
 
   useEffect(() => {
     fetchChatUser();
-  }, [props.onlineUserList]);
+  }, []);
 
   const getConnectedUserIds = () => {
     let connectedUsers = "";
@@ -68,15 +68,13 @@ const Sidebar = (props) => {
       members: [memberId, userId],
       type: "DM",
     };
-    const chatMember = await ApiConnector.sendPostRequest(
+    await ApiConnector.sendPostRequest(
       ApiEndpoints.CHAT_URL,
       JSON.stringify(requestBody),
       true,
       false
     );
-    let currentChatUsers = [...chatUsers];
-    currentChatUsers.push(chatMember);
-    setChatUsers(currentChatUsers);
+    fetchChatUser();
     setIsShowAddPeopleModal(false);
   };
 
@@ -91,6 +89,18 @@ const Sidebar = (props) => {
     window.location.href = AppPaths.LOGIN;
   };
 
+  const getChatListWithOnlineUser = () => {
+    let updatedChatList = chatUsers.map((user) => {
+      if (props.onlineUserList.includes(user.id)) {
+        user.isOnline = true;
+      } else {
+        user.isOnline = false;
+      }
+      return user;
+    });
+    return updatedChatList;
+  };
+
   return (
     <div className="col-12 col-sm-4 col-md-4 col-lg-4 col-xl-2 border-right">
       <div className="d-none d-md-block">
@@ -102,7 +112,7 @@ const Sidebar = (props) => {
         </button>
       </div>
       <div className="user-list-container">
-        {chatUsers?.map((chatUser) => {
+        {getChatListWithOnlineUser()?.map((chatUser) => {
           return (
             <Link
               onClick={() => props.setCurrentChattingMember(chatUser)}
