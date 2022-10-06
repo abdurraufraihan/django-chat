@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import AuthRequired from "../../components/auth/AuthRequired";
-import ChatBody from "../../components/chatbody/ChatBody";
-import Sidebar from "../../components/sidebar/Sidebar";
+import React, { useState } from 'react';
+import AuthRequired from '../../components/auth/AuthRequired';
+import ChatBody from '../../components/chatbody/ChatBody';
+import Sidebar from '../../components/sidebar/Sidebar';
 
 const HomeScreen = (props) => {
   const [currentChattingMember, setCurrentChattingMember] = useState({});
@@ -12,16 +12,8 @@ const HomeScreen = (props) => {
       <div className="container-fluid p-0">
         <div className="container-fluid">
           <div className="row g-0">
-            <Sidebar
-              setCurrentChattingMember={setCurrentChattingMember}
-              onlineUserList={onlineUserList}
-              {...props}
-            />
-            <ChatBody
-              setOnlineUserList={setOnlineUserList}
-              currentChattingMember={currentChattingMember}
-              {...props}
-            />
+            <Sidebar setCurrentChattingMember={setCurrentChattingMember} onlineUserList={onlineUserList} {...props} />
+            <ChatBody setOnlineUserList={setOnlineUserList} currentChattingMember={currentChattingMember} {...props} />
           </div>
         </div>
       </div>
