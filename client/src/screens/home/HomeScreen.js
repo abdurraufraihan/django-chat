@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import AuthRequired from "../../components/auth/AuthRequired";
 import ChatBody from "../../components/chatbody/ChatBody";
-import Sidebar from "../../components/sidebar/Sidebar";
+import Sidebar from "../../components/sidebar/sidebar";
 
 const HomeScreen = (props) => {
   const [currentChattingMember, setCurrentChattingMember] = useState({});
